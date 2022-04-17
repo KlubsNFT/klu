@@ -27,11 +27,15 @@ contract KluBurner is Ownable, IKluBurner {
         emit SetBurnListener(_burnListner);
     }
 
-    function burn(address who, address account, uint256 amount) external {
-        klu.approve(address(burnListner), amount);
-        uint256 used = burnListner.onBurn(account, amount);
-        klu.burnFrom(account, amount.sub(used));
+    function burn(address who, address account, uint256 amount) external returns (uint256 used) {
+        if (address(burnListner) != address(0)) {
+            klu.approve(address(burnListner), amount);
+            used = burnListner.onBurn(account, amount);
+            klu.burnFrom(account, amount.sub(used));
+        } else {
+            klu.burnFrom(account, amount);
+        }
         totalBurned[who] = totalBurned[who].add(amount);
-        emit Burn(who, account, amount);
+        emit Burn(who, account, amount, used);
     }
 }

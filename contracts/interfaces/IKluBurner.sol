@@ -7,8 +7,8 @@ contract IKluBurner {
 
     event SetKlu(KIP7Burnable klu);
     event SetBurnListener(IBurnListener burnListener);
-    event Burn(address who, address account, uint256 amount);
+    event Burn(address who, address account, uint256 amount, uint256 used);
 
     function totalBurned(address who) external view returns (uint256);
-    function burn(address who, address account, uint256 amount) external;
+    function burn(address who, address account, uint256 amount) external returns (uint256 used);
 }
