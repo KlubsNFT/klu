@@ -742,7 +742,7 @@ contract KIP7Burnable is KIP13, KIP7 {
 }
 
 contract IBurnListener {
-    function onBurn(address account, uint256 amount) external returns (uint256 used);
+    function onBurn(address who, address account, uint256 amount) external returns (uint256 used);
 }
 
 contract IKluBurner {
@@ -779,7 +779,7 @@ contract KluBurner is Ownable, IKluBurner {
     function burn(address who, address account, uint256 amount) external returns (uint256 used) {
         if (address(burnListner) != address(0)) {
             klu.approve(address(burnListner), amount);
-            used = burnListner.onBurn(account, amount);
+            used = burnListner.onBurn(who, account, amount);
             klu.burnFrom(account, amount.sub(used));
         } else {
             klu.burnFrom(account, amount);
